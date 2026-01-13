@@ -15,7 +15,7 @@ import { AccountFrontEnd, RequestWithAccount } from 'src/types';
 
 @Injectable()
 export class AccountsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async findByEmail(email: string) {
     return await this.prisma.account.findUniqueOrThrow({
@@ -31,7 +31,7 @@ export class AccountsService {
     const accountCount = await this.prisma.account.count();
 
     if (accountCount > 0) {
-      throw new BadRequestException('An account already exists');
+      throw new BadRequestException('an account already exists');
     }
 
     const adminRoleId = await this.prisma.role.findFirst({
@@ -42,7 +42,7 @@ export class AccountsService {
 
     if (!adminRoleId) {
       throw new NotFoundException(
-        'Admin role has not been created. Check your seed file.',
+        'admin role has not been created. Check your seed file.',
       );
     }
 
@@ -89,7 +89,6 @@ export class AccountsService {
     );
 
     if (!hasAdminRole) {
-      // need to test
       throw new HttpException('account not admin', HttpStatus.FORBIDDEN)
     }
 
@@ -154,6 +153,17 @@ export class AccountsService {
     return await this.prisma.account.findUniqueOrThrow({
       where: {
         id: id,
+      },
+      include: {
+        role: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      omit: {
+        roleId: true,
+        password: true,
       },
     });
   }
