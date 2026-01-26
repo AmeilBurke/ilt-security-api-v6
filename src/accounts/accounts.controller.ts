@@ -20,6 +20,12 @@ export class AccountsController {
     return this.accountsService.create(request, createAccountDto);
   }
 
+  @Public()
+  @Get('/count')
+  findAccountCount() {
+    return this.accountsService.getAccountCount();
+  }
+
   @Get()
   findAll() {
     return this.accountsService.findAll();

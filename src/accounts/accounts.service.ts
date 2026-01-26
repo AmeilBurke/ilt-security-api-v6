@@ -25,6 +25,10 @@ export class AccountsService {
     });
   }
 
+  async getAccountCount() {
+    return await this.prisma.account.count()
+  }
+
   async createInitialAdmin(
     createInitialAdminAccountDto: CreateInitialAdminAccountDto,
   ): Promise<AccountFrontEnd> {

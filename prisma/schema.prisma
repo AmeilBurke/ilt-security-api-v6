@@ -31,7 +31,7 @@ model Account {
 model Venue {
   id         Int              @id @default(autoincrement())
   name       String           @unique
-  imagePath  String
+  // imagePath  String
   accesses   VenueAccess[]
   managers   VenueManager[]
   banDetails BanDetailVenue[]
@@ -43,6 +43,8 @@ model VenueAccess {
   venueId   Int
   account   Account @relation(fields: [accountId], references: [id])
   venue     Venue   @relation(fields: [venueId], references: [id])
+
+  @@unique([accountId, venueId])
 }
 
 model VenueManager {
@@ -92,4 +94,6 @@ model BanDetailVenue {
   venueId Int
   ban     BanDetail @relation(fields: [banId], references: [id])
   venue   Venue     @relation(fields: [venueId], references: [id])
+
+  @@unique([banId, venueId])
 }
