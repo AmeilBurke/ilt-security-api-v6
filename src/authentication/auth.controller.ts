@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Get, Request } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthGuard } from './auth.guard';
@@ -16,7 +16,8 @@ export class AuthController {
     }
 
     @Get('profile')
-    getProfile(@Request() req) {
-        return req.user;
+    getProfile(@Req() req) {
+        // need to return acocunt details, not just name and id
+        return req.account;
     }
 }

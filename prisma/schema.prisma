@@ -11,89 +11,40 @@ datasource db {
 
 model Role {
   id       Int       @id @default(autoincrement())
-  name     String
+  name     String    @unique
   accounts Account[]
 }
 
 model Account {
-  id       Int            @id @default(autoincrement())
-  email    String         @unique
+  id       Int         @id @default(autoincrement())
+  email    String      @unique
   password String
   name     String
   roleId   Int
-  role     Role           @relation(fields: [roleId], references: [id])
-  accesses VenueAccess[]
-  manages  VenueManager[]
-  alerts   AlertDetail[]
+  role     Role        @relation(fields: [roleId], references: [id])
   bans     BanDetail[]
 }
 
 model Venue {
-  id         Int              @id @default(autoincrement())
-  name       String           @unique
-  // imagePath  String
-  accesses   VenueAccess[]
-  managers   VenueManager[]
-  banDetails BanDetailVenue[]
-}
-
-model VenueAccess {
-  id        Int     @id @default(autoincrement())
-  accountId Int
-  venueId   Int
-  account   Account @relation(fields: [accountId], references: [id])
-  venue     Venue   @relation(fields: [venueId], references: [id])
-
-  @@unique([accountId, venueId])
-}
-
-model VenueManager {
-  id        Int     @id @default(autoincrement())
-  venueId   Int
-  accountId Int
-  venue     Venue   @relation(fields: [venueId], references: [id])
-  account   Account @relation(fields: [accountId], references: [id])
+  id   Int    @id @default(autoincrement())
+  name String @unique
 }
 
 model BannedPerson {
-  id        Int           @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
   imagePath String
-  alerts    AlertDetail[]
   bans      BanDetail[]
 }
 
-model AlertDetail {
-  id           Int           @id @default(autoincrement())
-  personId     Int?
-  name         String
-  imagePath    String
-  reason       String
-  startTime    DateTime
-  uploadedById Int
-  uploadedBy   Account       @relation(fields: [uploadedById], references: [id])
-  person       BannedPerson? @relation(fields: [personId], references: [id])
-}
-
 model BanDetail {
-  id           Int              @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   personId     Int
   reason       String
   startDate    DateTime
   endDate      DateTime
   isPending    Boolean
   uploadedById Int
-  uploadedBy   Account          @relation(fields: [uploadedById], references: [id])
-  person       BannedPerson     @relation(fields: [personId], references: [id])
-  venues       BanDetailVenue[]
-}
-
-model BanDetailVenue {
-  id      Int       @id @default(autoincrement())
-  banId   Int
-  venueId Int
-  ban     BanDetail @relation(fields: [banId], references: [id])
-  venue   Venue     @relation(fields: [venueId], references: [id])
-
-  @@unique([banId, venueId])
+  uploadedBy   Account      @relation(fields: [uploadedById], references: [id])
+  person       BannedPerson @relation(fields: [personId], references: [id])
 }
