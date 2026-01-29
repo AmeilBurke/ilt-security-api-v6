@@ -17,11 +17,11 @@ async function main() {
     data: [{ name: 'venue manager' }, { name: 'duty manager' }],
   });
 
-  await prisma.venue.create({
-    data: {
-      name: 'waikiwi tavern',
-    },
-  });
+  // await prisma.venue.create({
+  //   data: {
+  //     name: 'waikiwi tavern',
+  //   },
+  // });
 }
 
 main()

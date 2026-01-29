@@ -22,12 +22,6 @@ model Account {
   name     String
   roleId   Int
   role     Role        @relation(fields: [roleId], references: [id])
-  bans     BanDetail[]
-}
-
-model Venue {
-  id   Int    @id @default(autoincrement())
-  name String @unique
 }
 
 model BannedPerson {
@@ -43,8 +37,5 @@ model BanDetail {
   reason       String
   startDate    DateTime
   endDate      DateTime
-  isPending    Boolean
-  uploadedById Int
-  uploadedBy   Account      @relation(fields: [uploadedById], references: [id])
   person       BannedPerson @relation(fields: [personId], references: [id])
 }

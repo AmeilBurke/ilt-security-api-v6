@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
-import { CreateAccountDto, CreateInitialAdminAccountDto } from './dto/create-account.dto';
+import { CreateAccountDto, CreateInitialVenueManagerAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { Public } from 'src/authentication/public.guard';
 import type { RequestWithAccount } from "src/types";
@@ -11,8 +11,8 @@ export class AccountsController {
 
   @Public()
   @Post('/initial')
-  createInitialAdmin(@Body() createInitialAdminAccountDto: CreateInitialAdminAccountDto) {
-    return this.accountsService.createInitialAdmin(createInitialAdminAccountDto);
+  createInitialAdmin(@Body() createInitialAdminAccountDto: CreateInitialVenueManagerAccountDto) {
+    return this.accountsService.createInitialVenueManager(createInitialAdminAccountDto);
   }
 
   @Post()

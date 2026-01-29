@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import {
   CreateAccountDto,
-  CreateInitialAdminAccountDto,
+  CreateInitialVenueManagerAccountDto,
 } from './dto/create-account.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { hashPassword, isAccountAdmin } from 'src/utils';
+import { hashPassword, isAccountVenueManager } from 'src/utils';
 import { AccountFrontEnd, RequestWithAccount } from 'src/types';
 
 @Injectable()
@@ -29,8 +29,8 @@ export class AccountsService {
     return await this.prisma.account.count()
   }
 
-  async createInitialAdmin(
-    createInitialAdminAccountDto: CreateInitialAdminAccountDto,
+  async createInitialVenueManager(
+    createInitialVenueManagerAccountDto: CreateInitialVenueManagerAccountDto,
   ): Promise<AccountFrontEnd> {
     const accountCount = await this.prisma.account.count();
 
@@ -38,28 +38,28 @@ export class AccountsService {
       throw new BadRequestException('an account already exists');
     }
 
-    const adminRoleId = await this.prisma.role.findFirst({
+    const venueManagerRoleId = await this.prisma.role.findFirst({
       where: {
-        name: 'admin',
+        name: 'venue manager',
       },
     });
 
-    if (!adminRoleId) {
+    if (!venueManagerRoleId) {
       throw new NotFoundException(
-        'admin role has not been created. Check your seed file.',
+        'venue manager role has not been created. Check your seed file.',
       );
     }
 
     const accountPassword = await hashPassword(
-      createInitialAdminAccountDto.password,
+      createInitialVenueManagerAccountDto.password,
     );
 
-    const newAdminAccount = await this.prisma.account.create({
+    const newVenueManagerAccount = await this.prisma.account.create({
       data: {
-        email: createInitialAdminAccountDto.email.toLowerCase().trim(),
-        name: createInitialAdminAccountDto.name.toLowerCase().trim(),
+        email: createInitialVenueManagerAccountDto.email.toLowerCase().trim(),
+        name: createInitialVenueManagerAccountDto.name.toLowerCase().trim(),
         password: accountPassword,
-        roleId: adminRoleId.id,
+        roleId: venueManagerRoleId.id,
       },
       include: {
         role: {
@@ -74,7 +74,7 @@ export class AccountsService {
       },
     });
 
-    return newAdminAccount;
+    return newVenueManagerAccount;
   }
 
   async create(
@@ -87,12 +87,12 @@ export class AccountsService {
       },
     });
 
-    const hasAdminRole = await isAccountAdmin(
+    const hasVenueManagerRole = await isAccountVenueManager(
       requestAccount.roleId,
       this.prisma,
     );
 
-    if (!hasAdminRole) {
+    if (!hasVenueManagerRole) {
       throw new HttpException('account not admin', HttpStatus.FORBIDDEN)
     }
 

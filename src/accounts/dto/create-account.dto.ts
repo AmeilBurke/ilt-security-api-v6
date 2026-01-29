@@ -1,6 +1,6 @@
 import { IsEmail, IsNumber, IsString } from "class-validator";
 
-export class CreateInitialAdminAccountDto {
+export class CreateInitialVenueManagerAccountDto {
     @IsEmail()
     email!: string;
 

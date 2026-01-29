@@ -1,9 +1,4 @@
 import bcrypt from 'bcrypt';
-import { Prisma } from '@prisma/client';
-import {
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 export const hashPassword = async (
@@ -19,17 +14,17 @@ export const checkPassword = async (
   return await bcrypt.compare(unencryptedPassword, hashedString);
 };
 
-export const isAccountAdmin = async (
+export const isAccountVenueManager = async (
   roleId: number,
   prisma: PrismaService,
 ): Promise<boolean> => {
-  const adminRole = await prisma.role.findFirstOrThrow({
+  const venueManagerRole = await prisma.role.findFirstOrThrow({
     where: {
-      name: 'admin',
+      name: 'venue manager',
     },
   });
 
-  if (roleId === adminRole.id) {
+  if (roleId === venueManagerRole.id) {
     return true;
   }
 
